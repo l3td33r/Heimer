@@ -78,7 +78,10 @@ void EditorView::finishRubberBand()
 
 void EditorView::handleMousePressEventOnBackground(QMouseEvent & event)
 {
-    if (event.button() == Qt::LeftButton) {
+    if (event.button() == Qt::MiddleButton) {
+            initiateRubberBand();
+    }
+    else if (event.button() == Qt::LeftButton) {
         if (isModifierPressed()) {
             initiateRubberBand();
         } else {
@@ -308,6 +311,16 @@ void EditorView::mousePressEvent(QMouseEvent * event)
 
 void EditorView::mouseReleaseEvent(QMouseEvent * event)
 {
+    if (event->button() == Qt::MiddleButton) {
+        switch (m_mediator.mouseAction().action()) {
+          case MouseAction::Action::RubberBand:
+              finishRubberBand();
+              m_mediator.mouseAction().clear();
+              break;
+          default:
+              break;
+        }
+    }
     if (event->button() == Qt::LeftButton) {
         switch (m_mediator.mouseAction().action()) {
         case MouseAction::Action::MoveNode:
